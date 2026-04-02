@@ -47,7 +47,7 @@ cd "$MODEL_DIR"
 
 if command -v aria2c &>/dev/null; then
   echo "    Using aria2c (16 parallel connections)..."
-  aria2c -x 16 -s 16 "$MODEL_URL"
+  aria2c -x 4 -s 4 "$MODEL_URL"
 elif command -v wget &>/dev/null; then
   echo "    Using wget..."
   wget "$MODEL_URL"
@@ -60,7 +60,12 @@ else
 fi
 
 echo "    Extracting model..."
-tar xvf "$MODEL_ARCHIVE"
+if command -v pbzip2 &>/dev/null; then
+  echo "    Using pbzip2 for faster extraction..."
+  tar --use-compress-program=pbzip2 -xf "$MODEL_ARCHIVE"
+else
+  tar -xjf "$MODEL_ARCHIVE"
+fi
 rm "$MODEL_ARCHIVE"
 echo "    Model downloaded to $MODEL_DIR/$MODEL_NAME"
 

@@ -87,8 +87,28 @@ wget https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-o
 # Or using curl
 curl -L -O https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 
-tar xvf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
+tar -xjf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 rm sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
+```
+
+For faster extraction, install `pbzip2`:
+
+```bash
+# Debian/Ubuntu
+sudo apt install pbzip2
+
+# Then use:
+tar --use-compress-program=pbzip2 -xf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
+```
+
+For faster extraction, install `pbzip2`:
+
+```bash
+# Debian/Ubuntu
+sudo apt install pbzip2
+
+# Then use:
+tar --use-compress-program=pbzip2 -xf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 ```
 
 ## Usage
