@@ -21,20 +21,9 @@ if ! command -v git &>/dev/null; then
   exit 1
 fi
 
-# Clone repository
-TMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TMP_DIR"' EXIT
-
+# Clone repository directly into install directory
 echo "==> Cloning repository..."
-git clone --depth 1 "$REPO_URL" "$TMP_DIR/sherpa-onnx-stt-server"
-
-# Copy files to install directory
-echo "==> Setting up installation directory..."
-mkdir -p "$INSTALL_DIR"
-cp "$TMP_DIR/sherpa-onnx-stt-server/src/sherpa-onnx-stt-server.py" "$INSTALL_DIR/"
-cp -r "$TMP_DIR/sherpa-onnx-stt-server/src/sherpa_onnx_stt_server" "$INSTALL_DIR/"
-cp "$TMP_DIR/sherpa-onnx-stt-server/wrapperSherpa.sh" "$INSTALL_DIR/"
-chmod +x "$INSTALL_DIR/wrapperSherpa.sh"
+git clone "$REPO_URL" "$INSTALL_DIR"
 
 # Create virtual environment
 echo "==> Creating Python virtual environment..."
@@ -57,8 +46,11 @@ echo "     tar xvf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2 --strip-co
 echo "     rm sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2"
 echo ""
 echo "  2. Start the server:"
-echo "     $INSTALL_DIR/.venv/bin/python $INSTALL_DIR/sherpa-onnx-stt-server.py --model-dir=$INSTALL_DIR/model"
+echo "     $INSTALL_DIR/.venv/bin/python $INSTALL_DIR/src/sherpa-onnx-stt-server.py --model-dir=$INSTALL_DIR/model"
 echo ""
 echo "  3. Test it:"
-echo "     curl -s -X POST http://127.0.0.1:8765 -H 'Content-Type: application/json' -d '{\"file\":\"/path/to/audio.wav\"}'"
+echo "     curl -s -X POST http://127.0.0.1:8765 -F 'file=@/path/to/audio.wav'"
+echo ""
+echo "  4. Update later with:"
+echo "     cd $INSTALL_DIR && git pull"
 echo ""

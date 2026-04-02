@@ -18,43 +18,61 @@ def _json_default(o):
 
 
 def _parse_multipart(content_type, body):
-    """Parse a multipart/form-data body and return (filename, file_bytes)."""
+    """Parse a multipart/form-data body and return (filename, file_bytes).
+
+    Parses sequentially by searching for CRLF-delimited boundary markers
+    instead of naively splitting on the boundary bytes (which can appear
+    in binary file data).
+    """
     match = re.search(r'boundary=(?:"([^"]+)"|(\S+))', content_type)
     if not match:
         raise ValueError("No boundary found in Content-Type header")
 
     boundary = (match.group(1) or match.group(2)).encode()
-    delimiter = b"--" + boundary
-    end_delimiter = b"--" + boundary + b"--"
+    crlf_boundary = b"\r\n--" + boundary
+    end_marker = b"--" + boundary + b"--"
 
-    parts = body.split(delimiter)
+    # Find first boundary (preamble can exist before it)
+    first = body.find(b"--" + boundary)
+    if first == -1:
+        raise ValueError("No boundary found in request body")
 
-    for part in parts:
-        if part == b"" or part == b"--\r\n" or part == b"--":
-            continue
-        part = part.lstrip(b"\r\n")
-        if part == b"":
-            continue
+    # Skip past the first boundary line
+    pos = body.find(b"\r\n", first)
+    if pos == -1:
+        raise ValueError("Malformed multipart body")
+    pos += 2  # skip \r\n
 
-        header_end = part.find(b"\r\n\r\n")
-        if header_end == -1:
-            continue
+    # Find next boundary marker
+    next_boundary = body.find(crlf_boundary, pos)
+    if next_boundary == -1:
+        # Check for end marker
+        end_pos = body.find(end_marker, pos)
+        if end_pos == -1:
+            raise ValueError("No closing boundary found")
+        part = body[pos:end_pos]
+    else:
+        part = body[pos:next_boundary]
 
-        header_section = part[:header_end].decode("utf-8", errors="replace")
-        file_data = part[header_end + 4:]
+    # Split headers from file data
+    header_end = part.find(b"\r\n\r\n")
+    if header_end == -1:
+        raise ValueError("No header/data separator found")
 
-        if file_data.endswith(b"\r\n"):
-            file_data = file_data[:-2]
+    header_section = part[:header_end].decode("utf-8", errors="replace")
+    file_data = part[header_end + 4:]
 
-        filename_match = re.search(r'filename="([^"]*)"', header_section)
-        if not filename_match:
-            filename_match = re.search(r"filename=([^\s;]+)", header_section)
+    # Strip trailing \r\n if present
+    if file_data.endswith(b"\r\n"):
+        file_data = file_data[:-2]
 
-        filename = filename_match.group(1) if filename_match else "upload"
+    filename_match = re.search(r'filename="([^"]*)"', header_section)
+    if not filename_match:
+        filename_match = re.search(r"filename=([^\s;]+)", header_section)
 
-        return filename, file_data
+    filename = filename_match.group(1) if filename_match else "upload"
 
-    raise ValueError("No file found in multipart body")
+    return filename, file_data
 
 
 def _save_upload(file_bytes, original_filename):
