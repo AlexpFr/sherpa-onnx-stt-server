@@ -4,12 +4,11 @@ A persistent HTTP server that receives audio files and returns their text transc
 
 ## How It Works
 
-The server listens over HTTP and accepts POST requests containing an audio file path in JSON format:
+The server listens over HTTP and accepts POST requests with the audio file uploaded as `multipart/form-data`:
 
 ```bash
 curl -s -X POST http://127.0.0.1:8765 \
-  -H "Content-Type: application/json" \
-  -d '{"file":"/path/to/audio.wav"}'
+  -F "file=@/path/to/audio.wav"
 ```
 
 Response:

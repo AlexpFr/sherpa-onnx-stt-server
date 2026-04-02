@@ -16,5 +16,4 @@ fi
 curl -s \
   -X POST \
   http://127.0.0.1:8765 \
-  -H "Content-Type: application/json" \
-  -d "{\"file\":\"$AUDIO_FILE\"}"
+  -F "file=@$AUDIO_FILE"
