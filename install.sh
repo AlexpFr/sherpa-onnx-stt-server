@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="https://github.com/<your-username>/sherpa-onnx-stt-server.git"
+REPO_URL="https://github.com/AlexpFr/sherpa-onnx-stt-server.git"
 INSTALL_DIR="$HOME/.sherpa-onnx"
 
 echo "==> Installing sherpa-onnx-stt-server to $INSTALL_DIR"
