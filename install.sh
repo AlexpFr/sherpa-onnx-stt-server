@@ -60,9 +60,9 @@ else
 fi
 
 echo "    Extracting model..."
-if command -v pbzip2 &>/dev/null; then
-  echo "    Using pbzip2 for faster extraction..."
-  tar --use-compress-program=pbzip2 -xf "$MODEL_ARCHIVE"
+if command -v lbzip2 &>/dev/null; then
+  echo "    Using lbzip2 for faster extraction..."
+  tar -xvI lbzip2 -f "$MODEL_ARCHIVE"
 else
   tar -xjf "$MODEL_ARCHIVE"
 fi

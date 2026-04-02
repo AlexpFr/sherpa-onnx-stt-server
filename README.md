@@ -91,24 +91,14 @@ tar -xjf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 rm sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 ```
 
-For faster extraction, install `pbzip2`:
+For faster extraction, install `lbzip2`:
 
 ```bash
 # Debian/Ubuntu
-sudo apt install pbzip2
+sudo apt install lbzip2
 
 # Then use:
-tar --use-compress-program=pbzip2 -xf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
-```
-
-For faster extraction, install `pbzip2`:
-
-```bash
-# Debian/Ubuntu
-sudo apt install pbzip2
-
-# Then use:
-tar --use-compress-program=pbzip2 -xf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
+tar -xvI lbzip2 -f sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 ```
 
 ## Usage
