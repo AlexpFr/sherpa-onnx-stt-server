@@ -2,7 +2,7 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/AlexpFr/sherpa-onnx-stt-server.git"
-INSTALL_DIR="$HOME/.sherpa-onnx"
+INSTALL_DIR="$HOME/.sherpa-onnx-stt-server"
 
 echo "==> Installing sherpa-onnx-stt-server to $INSTALL_DIR"
 
@@ -42,11 +42,11 @@ echo "Next steps:"
 echo "  1. Download a model:"
 echo "     mkdir -p $INSTALL_DIR/model && cd $INSTALL_DIR/model"
 echo "     wget https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2"
-echo "     tar xvf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2 --strip-components=1"
+echo "     tar xvf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2"
 echo "     rm sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2"
 echo ""
 echo "  2. Start the server:"
-echo "     $INSTALL_DIR/.venv/bin/python $INSTALL_DIR/src/sherpa-onnx-stt-server.py --model-dir=$INSTALL_DIR/model"
+echo "     $INSTALL_DIR/.venv/bin/python $INSTALL_DIR/src/sherpa-onnx-stt-server.py --model-dir=$INSTALL_DIR/model/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8"
 echo ""
 echo "  3. Test it:"
 echo "     curl -s -X POST http://127.0.0.1:8765 -F 'file=@/path/to/audio.wav'"

@@ -66,7 +66,7 @@ All types support `--model-dir` for automatic file detection.
 mkdir -p $HOME/.sherpa-onnx/model
 cd $HOME/.sherpa-onnx/model
 wget https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
-tar xvf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2 --strip-components=1
+tar xvf sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 rm sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 ```
 
@@ -77,13 +77,13 @@ rm sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8.tar.bz2
 With `--model-dir` (automatic file detection):
 
 ```bash
-$HOME/.sherpa-onnx/.venv/bin/python $HOME/.sherpa-onnx/sherpa-onnx-stt-server.py --model-dir=$HOME/.sherpa-onnx/model
+$HOME/.sherpa-onnx/.venv/bin/python $HOME/.sherpa-onnx/sherpa-onnx-stt-server.py --model-dir=$HOME/.sherpa-onnx/model/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8
 ```
 
 Or with explicit paths:
 
 ```bash
-MODEL_DIR="$HOME/.sherpa-onnx/model"
+MODEL_DIR="$HOME/.sherpa-onnx/model/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8"
 
 $HOME/.sherpa-onnx/.venv/bin/python $HOME/.sherpa-onnx/sherpa-onnx-stt-server.py \
   --tokens="$MODEL_DIR/tokens.txt" \
@@ -112,7 +112,7 @@ $HOME/.sherpa-onnx/wrapperSherpa.sh /path/to/audio.wav
 
 ### Systemd Service
 
-Create file `/etc/systemd/system/sherpa-onnx-stt-server.service`:
+Create file `$HOME/.config/systemd/user/sherpa-onnx-stt-server.service`:
 
 ```ini
 [Unit]
@@ -121,8 +121,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=%h/.sherpa-onnx
-ExecStart=%h/.sherpa-onnx/.venv/bin/python sherpa-onnx-stt-server.py --model-dir=%h/.sherpa-onnx/model
+WorkingDirectory=%h/.sherpa-onnx-stt-server
+ExecStart=%h/.sherpa-onnx-stt-server/.venv/bin/python sherpa-onnx-stt-server.py --model-dir=%h/.sherpa-onnx-stt-server/model/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8
 Restart=on-failure
 RestartSec=5
 
@@ -140,7 +140,7 @@ systemctl --user enable --now sherpa-onnx-stt-server
 ## Project Structure
 
 ```
-~/.sherpa-onnx/                        Installation folder
+~/.sherpa-onnx-stt-server/                        Installation folder
 ├── sherpa-onnx-stt-server.py          Entry point
 ├── sherpa_onnx_stt_server/
 │   ├── __init__.py                    Orchestration (parse -> validate -> load -> serve)
